@@ -1,0 +1,7 @@
+name: umpteen
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - urllib3
+  - wikipedia
