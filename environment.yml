@@ -3,5 +3,8 @@ channels:
   - conda-forge
   - defaults
 dependencies:
+  - git>=2.23
+  - conda>=4.8.3
+  - git>=2.23
   - urllib3
   - wikipedia
