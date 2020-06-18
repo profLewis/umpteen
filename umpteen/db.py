@@ -3,7 +3,7 @@ def db():
   '''
   Database reading codes
   '''
-  def __init__(self)__:
+  def __init__(self):
     self.GoogleKnowledgeAPI='👽/.👽'
   
   def db.run(self,query='Taylor Swift'):
@@ -11,7 +11,7 @@ def db():
     Run through all databases defined
     setting up attributes
     '''
-    self.attributes = GoogleKnowledge(query=query,itemNumber=0)
+    self.attributes = self.GoogleKnowledge(query=query,itemNumber=0)
 
   def GoogleKnowledge(self,query='Taylor Swift',itemNumber=0):
     '''
