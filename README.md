@@ -1,7 +1,7 @@
 # umpteen
 gets database info
 
-To installi (using anaconda python):
+To install (using anaconda python):
 
 conda env update -f environment.yml
 conda activate umpteen
