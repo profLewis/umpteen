@@ -1,10 +1,8 @@
 # umpteen
 gets database info
 
-To install (using [anaconda python](https://docs.anaconda.com/anaconda/install/)):
+To install using [anaconda python](https://docs.anaconda.com/anaconda/install/), `cd` to `umpteen` directory (here!) and run (at command line):
 
-    conda env update -f environment.yml
-    conda activate umpteen
-    python setup.py install
+    .bin/install
 
 
