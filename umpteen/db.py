@@ -4,7 +4,14 @@ def db():
   Database reading codes
   '''
   def __init__(self)__:
-    return
+    self.GoogleKnowledgeAPI='👽/.👽'
+  
+  def db.run(self,query='Taylor Swift'):
+    '''
+    Run through all databases defined
+    setting up attributes
+    '''
+    self.attributes = GoogleKnowledge(query=query,itemNumber=0)
 
   def GoogleKnowledge(self,query='Taylor Swift',itemNumber=0):
     '''
@@ -22,20 +29,32 @@ def db():
                     Google knowledge graph. This will be a list if
                     itemNumber is a list
     
-    Assumes api_key available in .api_key.txt
+    Assumes api_key available
+
+    Details of APOI on:
+    https://developers.google.com/knowledge-graph
+
+    Attributes are:
+
+    service_url = "https://kgsearch.googleapis.com/v1/entities:search"
+    item=response['itemListElement'][value]
+    attributes = {
+        'name'       : item['result']['name'],
+        'type'       : item['result']['@type'],
+        'blurb'      : item['result']['detailedDescription']['articleBody'],
+        'url'        : item['result']['detailedDescription']['url'],
+        'image'      : item['result']['image']['url'],
+        'resultScore': item['resultScore'],
+        'description': item['result']['description']
+    }
+
 
     '''
-    hidden='👽/.👽'
     # ensure list
     if type(itemNumber) != list:
         itemNumber = [itemNumber]
     try:
-        try:  
-              api_key = open(hidden).read()
-        except:
-              print("No API key found for google knowledge")
-              print("your installation might be corrupted")
-              exit(0)
+        api_key = open(self.GoogleKnowledgeAPI).read()
     except:
         print("failed to read API key from file .api_key.txt")
         print("see: https://console.developers.google.com/apis/credentials?folder=&organizationId=&project=")
@@ -71,13 +90,13 @@ def db():
             # pull some attributes and put them in 
             # a dictionary called attributes
             attributes = {
-                'name'       : item['result']['name'],
-                'type'       : item['result']['@type'],
-                'blurb'      : item['result']['detailedDescription']['articleBody'],
-                'url'        : item['result']['detailedDescription']['url'],
-                'image'      : item['result']['image']['url'],
-                'resultScore': item['resultScore'],
-                'description': item['result']['description']
+            'name'       : item['result']['name'],
+            'type'       : item['result']['@type'],
+            'blurb'      : item['result']['detailedDescription']['articleBody'],
+            'url'        : item['result']['detailedDescription']['url'],
+            'image'      : item['result']['image']['url'],
+            'resultScore': item['resultScore'],
+            'description': item['result']['description']
             }
             retval.append(attributes)
         except:
