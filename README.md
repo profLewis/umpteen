@@ -10,4 +10,14 @@ To install using [anaconda python](https://docs.anaconda.com/anaconda/install/),
 
     .bin/install
 
+or
+
+    conda env update -f environment.yml
+    conda activate umpteen
+    python setup.py install
+
+When you start a nbew shell session, you may need to type:
+
+    conda activate umpteen
+
 
