@@ -1,6 +1,7 @@
 import urllib3
 import json
 import sys
+import wikipedia
 
 class Db:
   '''
@@ -66,7 +67,7 @@ class Db:
     service_url = "https://kgsearch.googleapis.com/v1/entities:search"
     params = {
         'query'  : query,
-        'limit'  : 10,
+        'limit'  : 1,
         'indent' : True,
         'key'    : api_key
     }
@@ -110,3 +111,9 @@ class Db:
         retval = retval[0]
         
     return(retval)
+
+
+if __name__ == "__main__":
+  db = Db()
+  resp = db.GoogleKnowledge("hello world")
+  print(resp)
