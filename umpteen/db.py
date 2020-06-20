@@ -1,12 +1,15 @@
+import urllib3
+import json
+import sys
 
-def db():
+class Db:
   '''
   Database reading codes
   '''
   def __init__(self):
     self.GoogleKnowledgeAPI='👽/.👽'
   
-  def db.run(self,query='Taylor Swift'):
+  def run(self,query='Taylor Swift'):
     '''
     Run through all databases defined
     setting up attributes
@@ -54,11 +57,11 @@ def db():
     if type(itemNumber) != list:
         itemNumber = [itemNumber]
     try:
-        api_key = open(self.GoogleKnowledgeAPI).read()
+        api_key = open(self.GoogleKnowledgeAPI).read().strip()
     except:
-        print("failed to read API key from file .api_key.txt")
+        print("failed to read API key")
         print("see: https://console.developers.google.com/apis/credentials?folder=&organizationId=&project=")
-        exit(0)
+        sys.exit(0)
 
     service_url = "https://kgsearch.googleapis.com/v1/entities:search"
     params = {
@@ -77,8 +80,8 @@ def db():
         response=json.loads(r.data.decode('utf-8'))
     except:
         print('Error connecting')
-        exit(0)
-    
+        sys.exit(0)
+
     # get items from list
     retval = []
     for value in itemNumber:
