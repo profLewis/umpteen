@@ -8,8 +8,9 @@ class Db:
   Database reading codes
   '''
   def __init__(self):
-    self.GoogleKnowledgeAPI='👽/.👽'
-  
+    self.error = []
+
+
   def run(self,query='Taylor Swift'):
     '''
     Run through all databases defined
@@ -17,6 +18,26 @@ class Db:
     '''
     self.attributes = self.GoogleKnowledge(query=query,itemNumber=0)
 
+
+  def get(self,url,params):
+    '''
+    get information from url
+    with parameters params
+
+    Note: uses urllib3 and assumes json response
+    '''
+
+    http = urllib3.PoolManager()
+
+    try:
+        r = http.request('GET', url,fields=params)
+        response=json.loads(r.data.decode('utf-8'))
+    except:
+        self.error.append(['Error in get() call:',url,params])
+        return(None)
+
+    return(response)
+  
   def GoogleKnowledge(self,query='Taylor Swift',itemNumber=0):
     '''
     Pull some information on a topic (person, company etc)
@@ -28,6 +49,7 @@ class Db:
                     with something obscure and you need to use a diifferent 
                     itemNumber. It can be a list, in which case the 
                     return is a list of dictionaries.
+
                  
     return:         Dictionary of attributes of entry in 
                     Google knowledge graph. This will be a list if
@@ -35,7 +57,7 @@ class Db:
     
     Assumes api_key available
 
-    Details of APOI on:
+    Details of API on:
     https://developers.google.com/knowledge-graph
 
     Attributes are:
@@ -54,9 +76,12 @@ class Db:
 
 
     '''
+
     # ensure list
     if type(itemNumber) != list:
         itemNumber = [itemNumber]
+
+    self.GoogleKnowledgeAPI='👽/.👽'
     try:
         api_key = open(self.GoogleKnowledgeAPI).read().strip()
     except:
@@ -64,7 +89,7 @@ class Db:
         print("see: https://console.developers.google.com/apis/credentials?folder=&organizationId=&project=")
         sys.exit(0)
 
-    service_url = "https://kgsearch.googleapis.com/v1/entities:search"
+    url = "https://kgsearch.googleapis.com/v1/entities:search"
     params = {
         'query'  : query,
         'limit'  : 1,
@@ -72,25 +97,24 @@ class Db:
         'key'    : api_key
     }
 
-    # get information from url
-    url = service_url
-    http = urllib3.PoolManager()
-    
-    try:
-        r = http.request('GET', url,fields=params)
-        response=json.loads(r.data.decode('utf-8'))
-    except:
-        print('Error connecting')
-        sys.exit(0)
 
-    # get items from list
+    try:
+        response = self.get(url,params)['itemListElement']
+    except:
+        return({})
+
     retval = []
     for value in itemNumber:
         # if we fail on any, we fail on all
         # could make this more tolerant
         try:
-            # lets go with the highest score match
-            item = response['itemListElement'][value]
+            item = response[value]
+        except:
+            item = []
+
+        # if we fail on any, we fail on all
+        # could make this more tolerant
+        try:
             # pull some attributes and put them in 
             # a dictionary called attributes
             attributes = {
