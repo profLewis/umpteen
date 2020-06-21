@@ -1,22 +1,23 @@
 import urllib3
 import json
 import sys
-import wikipedia
+import wikipediaapi
 
 class Db:
   '''
   Database reading codes
   '''
-  def __init__(self):
+  def __init__(self,lang='en'):
     self.error = []
-
+    self.lang = lang
+    self.wiki_wiki = wikipediaapi.Wikipedia(self.lang)
 
   def run(self,query='Taylor Swift'):
     '''
     Run through all databases defined
     setting up attributes
     '''
-    self.attributes = self.GoogleKnowledge(query=query,itemNumber=0)
+    self.attributes = self.GoogleKnowledge(query=query)
 
 
   def get(self,url,params):
@@ -37,7 +38,28 @@ class Db:
         return(None)
 
     return(response)
-  
+ 
+  def Wikipedia(self,query='Taylor Swift',itemNumber=0):
+    '''
+    Pull some information on a topic (person, company etc)
+    described in `query` (e.g. 'Mickey Mouse')
+
+    return:         Dictionary of attributes of entry in
+                    Wikipedia
+
+    '''
+    page_py = self.wiki_wiki.page(query)
+
+
+    attributes = {
+        'name'       : page_py.title,
+        'blurb'      : page_py.summary
+    }
+
+    return(attributes)
+
+    
+ 
   def GoogleKnowledge(self,query='Taylor Swift',itemNumber=0):
     '''
     Pull some information on a topic (person, company etc)
@@ -77,10 +99,6 @@ class Db:
 
     '''
 
-    # ensure list
-    if type(itemNumber) != list:
-        itemNumber = [itemNumber]
-
     self.GoogleKnowledgeAPI='👽/.👽'
     try:
         api_key = open(self.GoogleKnowledgeAPI).read().strip()
@@ -103,41 +121,34 @@ class Db:
     except:
         return({})
 
-    retval = []
-    for value in itemNumber:
-        # if we fail on any, we fail on all
-        # could make this more tolerant
-        try:
-            item = response[value]
-        except:
-            item = []
+    item = response[0]
+    # if we fail on any, we fail on all
+    # could make this more tolerant
+    try:
+        # pull some attributes and put them in 
+        # a dictionary called attributes
+        attributes = {
+        'name'       : item['result']['name'],
+        'type'       : item['result']['@type'],
+        'blurb'      : item['result']['detailedDescription']['articleBody'],
+        'url'        : item['result']['detailedDescription']['url'],
+        'image'      : item['result']['image']['url'],
+        'resultScore': item['resultScore'],
+        'description': item['result']['description']
+        }
+        return(attributes)
+    except:
+        # error code this
+        pass       
 
-        # if we fail on any, we fail on all
-        # could make this more tolerant
-        try:
-            # pull some attributes and put them in 
-            # a dictionary called attributes
-            attributes = {
-            'name'       : item['result']['name'],
-            'type'       : item['result']['@type'],
-            'blurb'      : item['result']['detailedDescription']['articleBody'],
-            'url'        : item['result']['detailedDescription']['url'],
-            'image'      : item['result']['image']['url'],
-            'resultScore': item['resultScore'],
-            'description': item['result']['description']
-            }
-            retval.append(attributes)
-        except:
-            retval.append({})
-            
-    # un-list it if appropriate
-    if len(retval) == 1:
-        retval = retval[0]
-        
-    return(retval)
+    return {}
 
 
 if __name__ == "__main__":
   db = Db()
   resp = db.GoogleKnowledge("hello world")
   print(resp)
+
+  resp = db.Wikipedia("hello world")
+  print(resp)
+
